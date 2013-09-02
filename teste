@@ -12,7 +12,7 @@ void main(){
 	puts(in);
 	string = RealtoFloatPoint(in);
 	printf("dsadsa %s",RealtoFloatPoint(in));
-	
+	printf("alteracao");
 	free(string);
 
 }
