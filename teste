@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "floatpoint.h"
+void main(){
+	char in[32];
+	char *string;
+	
+	string = malloc(sizeof(char)*32);
+	printf("digite\n");
+	gets(in);
+	puts(in);
+	string = RealtoFloatPoint(in);
+	printf("dsadsa %s",RealtoFloatPoint(in));
+	
+	free(string);
+
+}
