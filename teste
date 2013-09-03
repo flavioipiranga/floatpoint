@@ -14,5 +14,5 @@ void main(){
 	printf("dsadsa %s",RealtoFloatPoint(in));
 	printf("alteracao");
 	free(string);
-
+	//teste
 }
