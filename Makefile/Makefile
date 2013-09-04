@@ -1,3 +1,0 @@
-//makefile
-//teste netbeans
-//TTEET
