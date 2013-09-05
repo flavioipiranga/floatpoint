@@ -58,10 +58,29 @@ char* IntToBin(double real, char* bin){
 }
 
 
-char* FloatToBin (char* in) {
+char* FloatToBin (double real, char* bin) {
 
+	int i, aux=0;
+	double deci, frac;
 
-	return in;
+	deci = real;
+	frac = real - frac;
+
+	//tamanho eh de 32 bits pois no MIPS os registradores possuem 32 bits
+	for(i = 0; i<32; i++){
+
+		frac = 2*frac;
+		aux = frac;
+		frac = frac - aux;
+
+		if(aux == 1)
+			strcat(bin, BIT1);
+
+		else strcat(bin, BIT0);
+
+	}
+
+	return bin;
 }
 
 //Recebe a string contendo o numero real e transforma para tipo double
