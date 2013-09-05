@@ -11,6 +11,8 @@
 
 #define BIT0  "0"
 #define BIT1  "1"
+#define SVIES  127
+
 
 //Apenas inverte uma string
 char* InvString(char* string){
@@ -93,10 +95,29 @@ char* FloatToBin (double real, char* bin) {
 	return bin;
 }
 
+char* ExpToBinSimple (int exp, char* bini){
+    int i;
+
+    for(i = 0; i<8; i++){
+
+        if(exp%2)
+            strcat(bini, BIT1);
+        else strcat(bini, BIT0);
+
+        exp = exp/2;
+    }
+
+    strcpy(bini, InvString(bini));
+
+    return bini;
+}
+
 char* RealToFloatPoint(double num, char* bin){
 	char *binint, *binfra;
 	char *binfp;
-	char *teste = ".";
+	char p, auxs;
+	int pos = 0, exp = 0, i, j;
+
 	binint = malloc(sizeof(char)*32);
 	binfra = malloc(sizeof(char)*33);
 
@@ -109,6 +130,60 @@ char* RealToFloatPoint(double num, char* bin){
 	strcat(binfp,binint);
 	strcat(binfp,".");
 	strcat(binfp,binfra);
+
+
+	   if(binfp[0] == '0'){
+	       while(binfp[0] == '0'){
+
+	            p =  strchr(binfp, '.');
+	            pos = p-binfp;
+
+	            if(binfp[pos - 1]== '1')
+	                break;
+
+	            auxs = binfp[pos + 1];
+	            binfp[pos + 1] = '.';
+	            binfp[pos] = auxs;
+
+	            exp--;
+
+	       }
+	   }
+	   else {
+	       while(binfp[1] != '.'){
+
+	            p =  strchr(binfp, '.');
+	            pos = p-binfp;
+	            auxs = binfp[pos - 1];
+	            binfp[pos - 1] = '.';
+	            binfp[pos] = auxs;
+
+	            exp++;
+
+	       }
+	   }
+
+	   p =  strchr(binfp, '.');
+	   pos = p-binfp;
+
+	   for(i=0, j=pos+1; i < 23; i++, j++){
+
+	       binfra[i] = binfp[j];
+
+	   }
+
+	   exp = exp+SVIES;
+
+	   strcpy(binexp, ExpToBinSimple(exp));
+
+	   for(i=0, j=0; i<32; i++){
+		   if(i=0)
+			   floatbin[0] = bsig;
+		   else if (i>0 && i<9)
+			   floatbin[i] = binexp[j];
+		   else floatbin[i] = binfra[j];
+
+	   }
 
 	return bin;
 
