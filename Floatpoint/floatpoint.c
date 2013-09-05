@@ -14,73 +14,63 @@
 
 //Real para binario
 
-
 char* InvString(char* string){
-    int tam =0, j, i;
-    char* aux;
+	int tam =0, j, i;
+	char* aux;
 
-    // obtendo o tamanho da string
-    while(string[tam] != '\0')
-        tam++;
+	// obtendo o tamanho da string
+	while(string[tam] != '\0')
+		tam++;
 
-    // alocando espaco
-    aux = (char*)malloc(tam * sizeof(char));
-    for(i = tam - 1, j = 0; i >= 0; i--, j++)
-        aux[j] = string[i];
-    aux[j] = '\0';
+	// alocando espaco
+	aux = (char*)malloc(tam * sizeof(char));
+	for(i = tam - 1, j = 0; i >= 0; i--, j++)
+		aux[j] = string[i];
+	aux[j] = '\0';
 
-    return aux;
+	return aux;
 
 }
 
-char* InttoBin(char* in){
-	char bin[32];
-	int deci;
+char* IntToBin(double real, char* bin){
+	int deci, i;
+	deci = real;
 
-	int i;
+	if(deci == 0)
+		strcat(bin, BIT0);
 
-    if(deci == 0)
-        strcat(bin, BIT0);
+	for(i = 0; i<32; i++){
+		if(deci == 0)
+			break;
 
-    for(i = 0; i<32; i++){
-        if(deci == 0)
-            break;
+		if(deci%2)
+			strcat(bin, BIT1);
 
-        if(deci%2)
-            strcat(bin, BIT1);
+		else strcat(bin, BIT0);
 
-        else strcat(bin, BIT0);
+		deci = deci/2;
 
-        deci = deci/2;
+	}
 
-
-    }
-
-    strcpy(bin, InvString(bin));
-
+	strcpy(bin, InvString(bin));
 
 	return bin;
-	}
+}
 
 
-char* FloattoBin (char* in) {
-
-
-
+char* FloatToBin (char* in) {
 
 
 	return in;
-	}
+}
 
-char* RealtoFloatPoint(char* in){
+//Recebe a string contendo o numero real e transforma para tipo double
+double StringToDouble(char* in, double num){
 
 	char **endptr;
-	double num;
-	puts(in);
+
 	num = strtod(in, endptr);
 
-	printf("Teste:%lf", num);
+	return num;
 
-	return in;
-
-	}
+}

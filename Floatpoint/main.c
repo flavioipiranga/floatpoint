@@ -8,20 +8,23 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include<string.h>
+#include <string.h>
 #include "floatpoint.h"
 /*
  *
  */
 int main(int argc, char** argv) {
+	char *in, *bin;
+	double num=0;
+	in = malloc(sizeof(char)*32);
+	bin = malloc(sizeof(char)*32);
 
+	printf("digite\n");
+	scanf("%s", in);
+	num = StringToDouble(in,num);
 
-	printf("hello world");
-	printf("");
-
-//as
-
-
+	IntToBin(num, bin);
+	printf("%s", bin);
 	return (EXIT_SUCCESS);
 }
 

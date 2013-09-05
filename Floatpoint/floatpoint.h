@@ -1,4 +1,4 @@
-char* InvString(char* string);
-char* InttoBin(char* in);
-char* FloattoBin (char* in);
-char* RealtoFloatPoint(char* in);
+char* InvString(char* string, char* bin);
+char* IntToBin(double real, char* bin);
+char* FloatToBin(char* in);
+double StringToDouble(char* in, double num);
