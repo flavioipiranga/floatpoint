@@ -12,8 +12,7 @@
 #define BIT0  "0"
 #define BIT1  "1"
 
-//Real para binario
-
+//Apenas inverte uma string
 char* InvString(char* string){
 	int tam =0, j, i;
 	char* aux;
@@ -29,6 +28,17 @@ char* InvString(char* string){
 	aux[j] = '\0';
 
 	return aux;
+
+}
+
+//Recebe a string contendo o numero real e transforma para tipo double
+double StringToDouble(char* in, double num){
+
+	char **endptr;
+
+	num = strtod(in, endptr);
+
+	return num;
 
 }
 
@@ -83,13 +93,23 @@ char* FloatToBin (double real, char* bin) {
 	return bin;
 }
 
-//Recebe a string contendo o numero real e transforma para tipo double
-double StringToDouble(char* in, double num){
+char* RealToFloatPoint(double num, char* bin){
+	char *binint, *binfra;
+	char *binfp;
+	char *teste = ".";
+	binint = malloc(sizeof(char)*32);
+	binfra = malloc(sizeof(char)*33);
 
-	char **endptr;
+	binfp = malloc(sizeof(char)*67);
 
-	num = strtod(in, endptr);
 
-	return num;
+	binint = IntToBin(num, binint);
+	binfra = FloatToBin(num,binfra);
+
+	strcat(binfp,binint);
+	strcat(binfp,".");
+	strcat(binfp,binfra);
+
+	return bin;
 
 }

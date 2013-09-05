@@ -23,8 +23,7 @@ int main(int argc, char** argv) {
 	scanf("%s", in);
 	num = StringToDouble(in,num);
 
-	IntToBin(num, bin);
-	printf("%s", bin);
+	RealToFloatPoint(num, bin);
 	return (EXIT_SUCCESS);
 }
 
