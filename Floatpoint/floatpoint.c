@@ -10,7 +10,7 @@
 char* InvString(char* string){
     int tam =0, j, i;
     char* aux;
- 	//sad
+//sadas
  	//asdsa
  	
     // obtendo o tamanho da string
