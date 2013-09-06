@@ -1,4 +1,4 @@
 floatpoint
 ==========
 
-Implementação da biblioteca IEE 754
+Implementação da biblioteca IEEE 754

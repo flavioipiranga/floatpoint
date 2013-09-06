@@ -14,16 +14,17 @@
  *
  */
 int main(int argc, char** argv) {
-	char *in, *bin;
+	char *in, *binfp;
 	double num=0;
-	in = malloc(sizeof(char)*32);
-	bin = malloc(sizeof(char)*32);
+	in = malloc(sizeof(char)*33);
 
-	printf("digite\n");
+	printf("digite o numero binario que deseja converter\n");
 	scanf("%s", in);
 	num = StringToDouble(in,num);
 
-	printf("binario %s", RealToFloatPoint(num, bin));
+	binfp = malloc(sizeof(char)*33);
+	binfp = RealToFloatPoint(num, binfp);
+	printf("O numero %f no padrao IEEE 754: %s %ld", num, binfp, strlen(binfp));
 	return (EXIT_SUCCESS);
 }
 

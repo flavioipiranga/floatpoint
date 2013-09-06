@@ -13,6 +13,10 @@
 #define BIT1  "1"
 #define SVIES  127
 
+typedef struct Normbin{
+	char *exp;
+	char *bin;
+}normbin;
 
 //Apenas inverte uma string
 char* InvString(char* string){
@@ -112,12 +116,58 @@ char* ExpToBinSimple (int exp, char* bini){
 	return bini;
 }
 
+normbin Normalize(char* bin, normbin nbin){
+
+	char *p, *bexp, auxs, *aux;
+	int pos = 0, exp=0, i, j;
+
+	if(bin[0] == '0'){
+			while(bin[0] == '0'){
+
+				p =  strchr(bin, '.');
+				pos = p-bin;
+
+				if(bin[pos - 1] == '1')
+					break;
+
+				auxs = bin[pos + 1];
+				bin[pos + 1] = '.';
+				bin[pos] = auxs;
+
+				exp--;
+
+			}
+		}
+		else {
+			while(bin[1] != '.'){
+
+				p =  strchr(bin, '.');
+				pos = p-bin;
+				auxs = bin[pos - 1];
+				bin[pos - 1] = '.';
+				bin[pos] = auxs;
+
+				exp++;
+
+			}
+		}
+
+	exp = exp+SVIES;
+
+	bexp = malloc(sizeof(char)*9);
+	bexp = ExpToBinSimple(exp,bexp);
+
+	strncpy(nbin.bin, &bin[2], sizeof(char)*23);
+	nbin.exp = bexp;
+
+	return nbin;
+}
+
 char* RealToFloatPoint(double num, char* binfp){
 	char *binint, *binfra, *binexp;
 	char *bin;
-	char *p, auxs, *bsig;
-	int pos = 0, exp = 0, i, j;
-
+	char *bsig;
+	normbin nbin;
 
 	if(num < 0){
 		num = num * -1;
@@ -126,7 +176,7 @@ char* RealToFloatPoint(double num, char* binfp){
 
 	else bsig = "0";
 
-	binint = malloc(sizeof(char)*32);
+	binint = malloc(sizeof(char)*33);
 	binfra = malloc(sizeof(char)*33);
 
 	bin = malloc(sizeof(char)*66);
@@ -141,49 +191,14 @@ char* RealToFloatPoint(double num, char* binfp){
 	strcat(bin,binfra);
 	free(binfra);
 
+	nbin.bin = malloc(sizeof(char)*24);
+	nbin.exp = malloc(sizeof(char)*9);
 
-	if(bin[0] == '0'){
-		while(bin[0] == '0'){
-
-			p =  strchr(bin, '.');
-			pos = p-bin;
-
-			if(bin[pos - 1] == '1')
-				break;
-
-			auxs = bin[pos + 1];
-			bin[pos + 1] = '.';
-			bin[pos] = auxs;
-
-			exp--;
-
-		}
-	}
-	else {
-		while(bin[1] != '.'){
-
-			p =  strchr(bin, '.');
-			pos = p-bin;
-			auxs = bin[pos - 1];
-			bin[pos - 1] = '.';
-			bin[pos] = auxs;
-
-			exp++;
-
-		}
-	}
-
-
-
-	exp = exp+SVIES;
-
-	binexp = malloc(sizeof(char)*8);
-	strcpy(binexp, ExpToBinSimple(exp, binexp));
-	free(binexp);
+	nbin = Normalize(bin, nbin);
 
 	strcat(binfp, bsig);
-	strcpy(&binfp[1], binexp);
-	strcpy(&binfp[9], &bin[2]);
+	strcat(binfp, nbin.exp);
+	strcat(binfp, nbin.bin);
 
 	return binfp;
 
