@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	scanf("%s", in);
 	num = StringToDouble(in,num);
 
-	RealToFloatPoint(num, bin);
+	printf("binario %s", RealToFloatPoint(num, bin));
 	return (EXIT_SUCCESS);
 }
 

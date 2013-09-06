@@ -96,95 +96,95 @@ char* FloatToBin (double real, char* bin) {
 }
 
 char* ExpToBinSimple (int exp, char* bini){
-    int i;
+	int i;
 
-    for(i = 0; i<8; i++){
+	for(i = 0; i<8; i++){
 
-        if(exp%2)
-            strcat(bini, BIT1);
-        else strcat(bini, BIT0);
+		if(exp%2)
+			bini[i] = '1';
+		else bini[i] = '0';
 
-        exp = exp/2;
-    }
+		exp = exp/2;
+	}
 
-    strcpy(bini, InvString(bini));
+	strcpy(bini, InvString(bini));
 
-    return bini;
+	return bini;
 }
 
-char* RealToFloatPoint(double num, char* bin){
-	char *binint, *binfra;
-	char *binfp;
-	char p, auxs;
+char* RealToFloatPoint(double num, char* binfp){
+	char *binint, *binfra, *binexp;
+	char *bin;
+	char *p, auxs, *bsig;
 	int pos = 0, exp = 0, i, j;
+
+
+	if(num < 0){
+		num = num * -1;
+		bsig = "1";
+	}
+
+	else bsig = "0";
 
 	binint = malloc(sizeof(char)*32);
 	binfra = malloc(sizeof(char)*33);
 
-	binfp = malloc(sizeof(char)*67);
-
+	bin = malloc(sizeof(char)*66);
 
 	binint = IntToBin(num, binint);
+	strcat(bin,binint);
+	free(binint);
+
+	strcat(bin,".");
+
 	binfra = FloatToBin(num,binfra);
-
-	strcat(binfp,binint);
-	strcat(binfp,".");
-	strcat(binfp,binfra);
+	strcat(bin,binfra);
+	free(binfra);
 
 
-	   if(binfp[0] == '0'){
-	       while(binfp[0] == '0'){
+	if(bin[0] == '0'){
+		while(bin[0] == '0'){
 
-	            p =  strchr(binfp, '.');
-	            pos = p-binfp;
+			p =  strchr(bin, '.');
+			pos = p-bin;
 
-	            if(binfp[pos - 1]== '1')
-	                break;
+			if(bin[pos - 1] == '1')
+				break;
 
-	            auxs = binfp[pos + 1];
-	            binfp[pos + 1] = '.';
-	            binfp[pos] = auxs;
+			auxs = bin[pos + 1];
+			bin[pos + 1] = '.';
+			bin[pos] = auxs;
 
-	            exp--;
+			exp--;
 
-	       }
-	   }
-	   else {
-	       while(binfp[1] != '.'){
+		}
+	}
+	else {
+		while(bin[1] != '.'){
 
-	            p =  strchr(binfp, '.');
-	            pos = p-binfp;
-	            auxs = binfp[pos - 1];
-	            binfp[pos - 1] = '.';
-	            binfp[pos] = auxs;
+			p =  strchr(bin, '.');
+			pos = p-bin;
+			auxs = bin[pos - 1];
+			bin[pos - 1] = '.';
+			bin[pos] = auxs;
 
-	            exp++;
+			exp++;
 
-	       }
-	   }
+		}
+	}
 
-	   p =  strchr(binfp, '.');
-	   pos = p-binfp;
 
-	   for(i=0, j=pos+1; i < 23; i++, j++){
 
-	       binfra[i] = binfp[j];
+	exp = exp+SVIES;
 
-	   }
+	binexp = malloc(sizeof(char)*8);
+	strcpy(binexp, ExpToBinSimple(exp, binexp));
+	free(binexp);
 
-	   exp = exp+SVIES;
+	strcat(binfp, bsig);
+	strcpy(&binfp[1], binexp);
+	strcpy(&binfp[9], &bin[2]);
 
-	   strcpy(binexp, ExpToBinSimple(exp));
-
-	   for(i=0, j=0; i<32; i++){
-		   if(i=0)
-			   floatbin[0] = bsig;
-		   else if (i>0 && i<9)
-			   floatbin[i] = binexp[j];
-		   else floatbin[i] = binfra[j];
-
-	   }
-
-	return bin;
+	return binfp;
 
 }
