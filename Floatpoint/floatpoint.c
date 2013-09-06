@@ -12,6 +12,9 @@
 #define BIT0  "0"
 #define BIT1  "1"
 #define SVIES  127
+#define DVIES  1023
+#define SPREC  1
+#define DPREC  2
 
 typedef struct Normbin{
 	char *exp;
@@ -99,10 +102,17 @@ char* FloatToBin (double real, char* bin) {
 	return bin;
 }
 
-char* ExpToBinSimple (int exp, char* bini){
-	int i;
+char* ExpToBinSimple (int exp, char* bini, int prec){
+	int i, max;
 
-	for(i = 0; i<8; i++){
+	if(prec == SPREC)
+		max = 8;
+
+	if(prec == DPREC)
+		max = 11;
+
+
+	for(i = 0; i<max; i++){
 
 		if(exp%2)
 			bini[i] = '1';
@@ -113,57 +123,72 @@ char* ExpToBinSimple (int exp, char* bini){
 
 	strcpy(bini, InvString(bini));
 
+
 	return bini;
 }
 
-normbin Normalize(char* bin, normbin nbin){
+normbin Normalize(char* bin, normbin nbin, int prec){
 
 	char *p, *bexp, auxs, *aux;
 	int pos = 0, exp=0, i, j;
 
 	if(bin[0] == '0'){
-			while(bin[0] == '0'){
+		while(bin[0] == '0'){
 
-				p =  strchr(bin, '.');
-				pos = p-bin;
+			p =  strchr(bin, '.');
+			pos = p-bin;
 
-				if(bin[pos - 1] == '1')
-					break;
+			if(bin[pos - 1] == '1')
+				break;
 
-				auxs = bin[pos + 1];
-				bin[pos + 1] = '.';
-				bin[pos] = auxs;
+			auxs = bin[pos + 1];
+			bin[pos + 1] = '.';
+			bin[pos] = auxs;
 
-				exp--;
+			exp--;
 
-			}
 		}
-		else {
-			while(bin[1] != '.'){
+	}
+	else {
+		while(bin[1] != '.'){
 
-				p =  strchr(bin, '.');
-				pos = p-bin;
-				auxs = bin[pos - 1];
-				bin[pos - 1] = '.';
-				bin[pos] = auxs;
+			p =  strchr(bin, '.');
+			pos = p-bin;
+			auxs = bin[pos - 1];
+			bin[pos - 1] = '.';
+			bin[pos] = auxs;
 
-				exp++;
+			exp++;
 
-			}
 		}
+	}
 
-	exp = exp+SVIES;
+	if(prec == SPREC){
 
-	bexp = malloc(sizeof(char)*9);
-	bexp = ExpToBinSimple(exp,bexp);
+		exp = exp+SVIES;
 
-	strncpy(nbin.bin, &bin[2], sizeof(char)*23);
-	nbin.exp = bexp;
+		bexp = malloc(sizeof(char)*9);
+		bexp = ExpToBinSimple(exp,bexp,prec);
+		printf("%s \n", bexp);
+		strncpy(nbin.bin, &bin[2], sizeof(char)*23);
+		nbin.exp = bexp;
+	}
+
+	if(prec == DPREC){
+		exp = exp+DVIES;
+
+		bexp = malloc(sizeof(char)*12);
+		bexp = ExpToBinSimple(exp,bexp,prec);
+
+		strncpy(nbin.bin, &bin[2], sizeof(char)*52);
+		nbin.exp = bexp;
+
+	}
 
 	return nbin;
 }
 
-char* RealToFloatPoint(double num, char* binfp){
+char* RealToFloatPoint(double num, char* binfp,int prec){
 	char *binint, *binfra, *binexp;
 	char *bin;
 	char *bsig;
@@ -191,13 +216,25 @@ char* RealToFloatPoint(double num, char* binfp){
 	strcat(bin,binfra);
 	free(binfra);
 
-	nbin.bin = malloc(sizeof(char)*24);
-	nbin.exp = malloc(sizeof(char)*9);
+	if(prec == SPREC){
+		nbin.bin = malloc(sizeof(char)*24);
+		nbin.exp = malloc(sizeof(char)*9);
 
-	nbin = Normalize(bin, nbin);
+		nbin = Normalize(bin, nbin, prec);
+
+	}
+
+	if(prec == DPREC){
+		nbin.bin = malloc(sizeof(char)*53);
+		nbin.exp = malloc(sizeof(char)*12);
+
+		nbin = Normalize(bin, nbin, prec);
+	}
 
 	strcat(binfp, bsig);
+	printf("%s \n", binfp);
 	strcat(binfp, nbin.exp);
+	printf("%s \n", binfp);
 	strcat(binfp, nbin.bin);
 
 	return binfp;
