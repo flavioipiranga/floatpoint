@@ -1,10 +1,10 @@
+SRC = /Users/flavioipiranga/git/floatpoint/Floatpoint/src/
+
 all:executavel
-    
-executavel: main.o floatpoint.o
-	gcc -o executavel main.o floatpoint.o
+	cd ./src	; $(MAKE)
+	
+executavel: main.o $(SRC)floatpoint.o
+	gcc -o executavel main.o $(SRC)floatpoint.o
 
-main.o: main.c floatpoint.h
+main.o: main.c $(SRC)floatpoint.h
 	gcc -o main.o -c main.c
-
-floatpoint.o: floatpoint.c
-	gcc -o floatpoint.o -c floatpoint.c
