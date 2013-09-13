@@ -169,7 +169,6 @@ normbin Normalize(char* bin, normbin nbin, int prec){
 
 		bexp = malloc(sizeof(char)*9);
 		bexp = ExpToBinSimple(exp,bexp,prec);
-		printf("%s \n", bexp);
 		strncpy(nbin.bin, &bin[2], sizeof(char)*23);
 		nbin.exp = bexp;
 	}
@@ -232,11 +231,11 @@ char* RealToFloatPoint(double num, char* binfp,int prec){
 	}
 
 	strcat(binfp, bsig);
-	printf("%s \n", binfp);
 	strcat(binfp, nbin.exp);
-	printf("%s \n", binfp);
 	strcat(binfp, nbin.bin);
 
 	return binfp;
 
 }
+
+

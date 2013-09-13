@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	in = malloc(sizeof(char)*33);
 	int prec;
 
-	printf("digite o numero binario que deseja converter\n");
+	printf("digite o numero real que deseja converter para binario\n");
 	scanf("%s", in);
 
 	printf("Digite o numero da precisao que deseja utilizar:\n");
@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 		binfp = malloc(sizeof(char)*65);
 
 	binfp = RealToFloatPoint(num, binfp, prec);
-	printf("O numero %f no padrao IEEE 754: %s %ld", num, binfp, strlen(binfp));
+	printf("O numero %f no padrao IEEE 754: %s", num, binfp);
 	return (EXIT_SUCCESS);
 }
 
