@@ -16,8 +16,15 @@
 int main(int argc, char** argv) {
 	char *in, *binfp;
 	double num=0;
-	in = malloc(sizeof(char)*33);
 	int prec;
+
+	if(!(in = malloc(sizeof(char)*33)))
+	{
+	fprintf(stderr, "Memoria insuficiente");   /* Prints the necessary error statement. */
+	exit(EXIT_FAILURE);  /* Exits <code>malloc</code> as there is insufficient memory. */
+	}
+
+
 
 	printf("digite o numero real que deseja converter para binario\n");
 	scanf("%s", in);
