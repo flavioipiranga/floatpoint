@@ -20,8 +20,8 @@ int main(int argc, char** argv) {
 
 	if(!(in = malloc(sizeof(char)*33)))
 	{
-	fprintf(stderr, "Memoria insuficiente");   /* Prints the necessary error statement. */
-	exit(EXIT_FAILURE);  /* Exits <code>malloc</code> as there is insufficient memory. */
+	fprintf(stderr, "Memoria insuficiente");
+	exit(EXIT_FAILURE);
 	}
 
 
@@ -34,16 +34,12 @@ int main(int argc, char** argv) {
 	printf("2) Precisao dupla\n");
 	scanf("%d", &prec);
 
-	num = StringToDouble(in,num);
+	num = StringToDouble(in);
 
-	if(prec == 1)
-		binfp = malloc(sizeof(char)*33);
 
-	if(prec == 2)
-		binfp = malloc(sizeof(char)*65);
-
-	binfp = RealToFloatPoint(num, binfp, prec);
+	binfp = RealToFloatPoint(num, prec);
 	printf("O numero %f no padrao IEEE 754: %s", num, binfp);
+	free(binfp);
 	return (EXIT_SUCCESS);
 }
 

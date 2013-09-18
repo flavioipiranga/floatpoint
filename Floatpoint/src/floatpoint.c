@@ -41,17 +41,18 @@ char* InvString(char* string){
 }
 
 //Recebe a string contendo o numero real e transforma para tipo double
-double StringToDouble(char* in, double num){
+double StringToDouble(char* in){
+	double num;
 
-	char **endptr;
-
-	num = strtod(in, endptr);
+	sscanf(in, "%lf", &num);
 
 	return num;
-
 }
 
-char* IntToBin(double real, char* bin){
+char* IntToBin(double real){
+
+	char* bin = malloc(sizeof(char)*33);
+
 	int deci, i;
 	deci = real;
 
@@ -77,13 +78,15 @@ char* IntToBin(double real, char* bin){
 }
 
 
-char* FloatToBin (double real, char* bin) {
+char* FloatToBin (double real) {
+
 
 	int i, aux=0;
 	double deci, frac;
 
 	deci = real;
 	frac = real - frac;
+	char* bin = malloc(sizeof(char)*33);
 
 	//tamanho eh de 32 bits pois no MIPS os registradores possuem 32 bits
 	for(i = 0; i<32; i++){
@@ -102,8 +105,9 @@ char* FloatToBin (double real, char* bin) {
 	return bin;
 }
 
-char* ExpToBinSimple (int exp, char* bini, int prec){
+char* ExpToBinSimple (int exp, int prec){
 	int i, max;
+	char* bin = malloc(sizeof(char)*33);
 
 	if(prec == SPREC)
 		max = 8;
@@ -115,20 +119,21 @@ char* ExpToBinSimple (int exp, char* bini, int prec){
 	for(i = 0; i<max; i++){
 
 		if(exp%2)
-			bini[i] = '1';
-		else bini[i] = '0';
+			bin[i] = '1';
+		else bin[i] = '0';
 
 		exp = exp/2;
 	}
 
-	strcpy(bini, InvString(bini));
+	strcpy(bin, InvString(bin));
 
 
-	return bini;
+	return bin;
 }
 
-normbin Normalize(char* bin, normbin nbin, int prec){
+normbin Normalize(char* bin, int prec){
 
+	normbin nbin;
 	char *p, *bexp, auxs, *aux;
 	int pos = 0, exp=0, i, j;
 
@@ -167,31 +172,48 @@ normbin Normalize(char* bin, normbin nbin, int prec){
 
 		exp = exp+SVIES;
 
-		bexp = malloc(sizeof(char)*9);
-		bexp = ExpToBinSimple(exp,bexp,prec);
+		if(!(nbin.exp = malloc(sizeof(char)*9)))
+		{
+			fprintf(stderr, "Memoria insuficiente");
+			exit(EXIT_FAILURE);
+		}
+		nbin.exp = ExpToBinSimple(exp, prec);
+
+		if(!(nbin.bin = malloc(sizeof(char)*23)))
+		{
+			fprintf(stderr, "Memoria insuficiente");
+			exit(EXIT_FAILURE);
+		}
+
+
 		strncpy(nbin.bin, &bin[2], sizeof(char)*23);
-		nbin.exp = bexp;
 	}
 
 	if(prec == DPREC){
 		exp = exp+DVIES;
 
-		bexp = malloc(sizeof(char)*12);
-		bexp = ExpToBinSimple(exp,bexp,prec);
+		nbin.exp = malloc(sizeof(char)*12);
+		nbin.exp = ExpToBinSimple(exp, prec);
+		nbin.bin = malloc(sizeof(char)*52);
 
 		strncpy(nbin.bin, &bin[2], sizeof(char)*52);
-		nbin.exp = bexp;
 
 	}
 
 	return nbin;
 }
 
-char* RealToFloatPoint(double num, char* binfp,int prec){
-	char *binint, *binfra, *binexp;
+char* RealToFloatPoint(double num, int prec){
+	char *binint, *binfra;
 	char *bin;
-	char *bsig;
+	char *bsig, *binfp;
 	normbin nbin;
+
+	if(prec == 1)
+		binfp = malloc(sizeof(char)*33);
+
+	if(prec == 2)
+		binfp = malloc(sizeof(char)*65);
 
 	if(num < 0){
 		num = num * -1;
@@ -205,13 +227,13 @@ char* RealToFloatPoint(double num, char* binfp,int prec){
 
 	bin = malloc(sizeof(char)*66);
 
-	binint = IntToBin(num, binint);
+	binint = IntToBin(num);
 	strcat(bin,binint);
 	free(binint);
 
 	strcat(bin,".");
 
-	binfra = FloatToBin(num,binfra);
+	binfra = FloatToBin(num);
 	strcat(bin,binfra);
 	free(binfra);
 
@@ -219,7 +241,7 @@ char* RealToFloatPoint(double num, char* binfp,int prec){
 		nbin.bin = malloc(sizeof(char)*24);
 		nbin.exp = malloc(sizeof(char)*9);
 
-		nbin = Normalize(bin, nbin, prec);
+		nbin = Normalize(bin, prec);
 
 	}
 
@@ -227,8 +249,9 @@ char* RealToFloatPoint(double num, char* binfp,int prec){
 		nbin.bin = malloc(sizeof(char)*53);
 		nbin.exp = malloc(sizeof(char)*12);
 
-		nbin = Normalize(bin, nbin, prec);
+		nbin = Normalize(bin, prec);
 	}
+	free(bin);
 
 	strcat(binfp, bsig);
 	strcat(binfp, nbin.exp);

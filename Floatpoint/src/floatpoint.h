@@ -1,6 +1,6 @@
-char* InvString(char* string, char* bin);
-char* IntToBin(double real, char* bin);
-char* FloatToBin(double real, char* bin);
-double StringToDouble(char* in, double num);
-char* RealToFloatPoint(double num, char* bin, int prec);
-char* ExpToBinSimple (int exp, char* bini, int prec);
+char* InvString(char* string);
+char* IntToBin(double real);
+char* FloatToBin(double real);
+double StringToDouble(char* in);
+char* RealToFloatPoint(double num, int prec);
+char* ExpToBinSimple (int exp, int prec);
