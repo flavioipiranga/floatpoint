@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
 
 	BigNumToBin(in, prec);
 
+	BinToNum("00111111111111111111111111111111");
 	return (EXIT_SUCCESS);
 }
 //21321312321312321321312

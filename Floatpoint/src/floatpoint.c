@@ -356,3 +356,48 @@ void BigNumToBin(char* num, int prec){
 	mpz_clear(q);
 	mpz_clear(r);
 }
+
+char *BinToNum(char* bin){
+	int tamexp, tamsign, i, sinal;
+
+	int exp = 0, e, vies;
+	double sign, num;
+	if(bin[0] == '0')
+		sinal = 0;
+	else sinal = 1;
+
+	if(strlen(bin) == 32){
+		tamexp = 8;
+		vies =SVIES;
+	}
+	else if(strlen(bin) == 64){
+		tamexp = 11;
+		vies = DVIES;
+	}
+	printf("%d\n", exp);
+
+
+	for(i=1, e=7; i<tamexp+1; i++, e--){
+		if(bin[i] == '1'){
+			exp = exp + pow(2, e);
+			printf("%d\n", exp);
+
+		}
+	}
+
+	for(i=9, e=1; i<strlen(bin); i++, e++){
+			if(bin[i] == '1'){
+				sign = sign + 1/pow(2, e);
+			}
+
+		}
+
+	printf("expoente: %d significante: %.16lf", exp, sign);
+
+	num = pow(-1, sinal)*pow(2, exp-127)*(1+sign);
+
+	printf("numero final %.16lf", num);
+
+	return bin;
+
+}

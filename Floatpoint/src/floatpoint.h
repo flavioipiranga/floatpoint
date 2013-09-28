@@ -13,3 +13,4 @@ void BigNumToBin(char* num1, int prec);
 float StringToDouble(char* in);
 char* ExpToBin (int exp, int prec);
 normbin Normalize(char* bin, int prec, int sinal, int expoente);
+char *BinToNum(char* bin);
