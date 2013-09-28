@@ -1,0 +1,213 @@
+\hypertarget{floatpoint_8c}{\section{/\-Users/flavioipiranga/git/floatpoint/\-Floatpoint/src/floatpoint.c File Reference}
+\label{floatpoint_8c}\index{/\-Users/flavioipiranga/git/floatpoint/\-Floatpoint/src/floatpoint.\-c@{/\-Users/flavioipiranga/git/floatpoint/\-Floatpoint/src/floatpoint.\-c}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$math.\-h$>$}\\*
+{\ttfamily \#include $<$gmp.\-h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_normbin}{Normbin}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{floatpoint_8c_ad4d43f8748b542bce39e18790f845ecc}{B\-I\-T0}~\char`\"{}0\char`\"{}
+\item 
+\#define \hyperlink{floatpoint_8c_a601923eba46784638244c1ebf2622a2a}{B\-I\-T1}~\char`\"{}1\char`\"{}
+\item 
+\#define \hyperlink{floatpoint_8c_a8cc68886f3fd56d5a3ccba48332b5eef}{S\-V\-I\-E\-S}~127
+\item 
+\#define \hyperlink{floatpoint_8c_ad5595e6a84ecb8a41f96f939451747b5}{D\-V\-I\-E\-S}~1023
+\item 
+\#define \hyperlink{floatpoint_8c_a15b52b1512a111caf8c14f8385170f59}{S\-P\-R\-E\-C}~1
+\item 
+\#define \hyperlink{floatpoint_8c_a64c639b484c093df3d7e56980ebe9480}{D\-P\-R\-E\-C}~2
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct_normbin}{Normbin} \hyperlink{floatpoint_8c_ab3b096f3c3dce90d833ccad3b46ed8cc}{normbin}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \hyperlink{floatpoint_8c_ac8b4abb0190681f3b1eb11510fc2ca8f}{Inv\-String} (char $\ast$string)
+\item 
+float \hyperlink{floatpoint_8c_a35f709eb3c8d77837cdfbd4bc97918bb}{String\-To\-Double} (char $\ast$in)
+\item 
+char $\ast$ \hyperlink{floatpoint_8c_a1fce8e6a302472ee0d00626ad3d3a206}{Int\-To\-Bin} (double real)
+\item 
+char $\ast$ \hyperlink{floatpoint_8c_a821765c6f171934e27cdc1c29e02a232}{Float\-To\-Bin} (double real)
+\item 
+void \hyperlink{floatpoint_8c_acbca5f7cfdb3f608bda9fe03e43963da}{Big\-Num\-To\-Bin} (char $\ast$num)
+\item 
+char $\ast$ \hyperlink{floatpoint_8c_afca07c4f74da5d24c63c30d116108299}{Exp\-To\-Bin\-Simple} (int exp, int prec)
+\item 
+\hyperlink{floatpoint_8c_ab3b096f3c3dce90d833ccad3b46ed8cc}{normbin} \hyperlink{floatpoint_8c_ab65350db292fb3d14b89f864b8c0563e}{Normalize} (char $\ast$bin, int prec)
+\item 
+char $\ast$ \hyperlink{floatpoint_8c_a634331d6e2228c9925071838ba7a158e}{Real\-To\-Float\-Point} (double num, int prec)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{floatpoint_8c_ad4d43f8748b542bce39e18790f845ecc}{\index{floatpoint.\-c@{floatpoint.\-c}!B\-I\-T0@{B\-I\-T0}}
+\index{B\-I\-T0@{B\-I\-T0}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{B\-I\-T0}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-I\-T0~\char`\"{}0\char`\"{}}}\label{floatpoint_8c_ad4d43f8748b542bce39e18790f845ecc}
+
+
+Definition at line 26 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a601923eba46784638244c1ebf2622a2a}{\index{floatpoint.\-c@{floatpoint.\-c}!B\-I\-T1@{B\-I\-T1}}
+\index{B\-I\-T1@{B\-I\-T1}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{B\-I\-T1}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-I\-T1~\char`\"{}1\char`\"{}}}\label{floatpoint_8c_a601923eba46784638244c1ebf2622a2a}
+
+
+Definition at line 27 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a64c639b484c093df3d7e56980ebe9480}{\index{floatpoint.\-c@{floatpoint.\-c}!D\-P\-R\-E\-C@{D\-P\-R\-E\-C}}
+\index{D\-P\-R\-E\-C@{D\-P\-R\-E\-C}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{D\-P\-R\-E\-C}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-P\-R\-E\-C~2}}\label{floatpoint_8c_a64c639b484c093df3d7e56980ebe9480}
+
+
+Definition at line 31 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_ad5595e6a84ecb8a41f96f939451747b5}{\index{floatpoint.\-c@{floatpoint.\-c}!D\-V\-I\-E\-S@{D\-V\-I\-E\-S}}
+\index{D\-V\-I\-E\-S@{D\-V\-I\-E\-S}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{D\-V\-I\-E\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\-V\-I\-E\-S~1023}}\label{floatpoint_8c_ad5595e6a84ecb8a41f96f939451747b5}
+
+
+Definition at line 29 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a15b52b1512a111caf8c14f8385170f59}{\index{floatpoint.\-c@{floatpoint.\-c}!S\-P\-R\-E\-C@{S\-P\-R\-E\-C}}
+\index{S\-P\-R\-E\-C@{S\-P\-R\-E\-C}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{S\-P\-R\-E\-C}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-P\-R\-E\-C~1}}\label{floatpoint_8c_a15b52b1512a111caf8c14f8385170f59}
+
+
+Definition at line 30 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a8cc68886f3fd56d5a3ccba48332b5eef}{\index{floatpoint.\-c@{floatpoint.\-c}!S\-V\-I\-E\-S@{S\-V\-I\-E\-S}}
+\index{S\-V\-I\-E\-S@{S\-V\-I\-E\-S}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{S\-V\-I\-E\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-V\-I\-E\-S~127}}\label{floatpoint_8c_a8cc68886f3fd56d5a3ccba48332b5eef}
+
+
+Definition at line 28 of file floatpoint.\-c.
+
+
+
+\subsection{Typedef Documentation}
+\hypertarget{floatpoint_8c_ab3b096f3c3dce90d833ccad3b46ed8cc}{\index{floatpoint.\-c@{floatpoint.\-c}!normbin@{normbin}}
+\index{normbin@{normbin}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{normbin}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Normbin} {\bf normbin}}}\label{floatpoint_8c_ab3b096f3c3dce90d833ccad3b46ed8cc}
+
+
+\subsection{Function Documentation}
+\hypertarget{floatpoint_8c_acbca5f7cfdb3f608bda9fe03e43963da}{\index{floatpoint.\-c@{floatpoint.\-c}!Big\-Num\-To\-Bin@{Big\-Num\-To\-Bin}}
+\index{Big\-Num\-To\-Bin@{Big\-Num\-To\-Bin}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Big\-Num\-To\-Bin}]{\setlength{\rightskip}{0pt plus 5cm}void Big\-Num\-To\-Bin (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{num}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_acbca5f7cfdb3f608bda9fe03e43963da}
+
+
+Definition at line 131 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_afca07c4f74da5d24c63c30d116108299}{\index{floatpoint.\-c@{floatpoint.\-c}!Exp\-To\-Bin\-Simple@{Exp\-To\-Bin\-Simple}}
+\index{Exp\-To\-Bin\-Simple@{Exp\-To\-Bin\-Simple}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Exp\-To\-Bin\-Simple}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Exp\-To\-Bin\-Simple (
+\begin{DoxyParamCaption}
+\item[{int}]{exp, }
+\item[{int}]{prec}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_afca07c4f74da5d24c63c30d116108299}
+
+
+Definition at line 168 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a821765c6f171934e27cdc1c29e02a232}{\index{floatpoint.\-c@{floatpoint.\-c}!Float\-To\-Bin@{Float\-To\-Bin}}
+\index{Float\-To\-Bin@{Float\-To\-Bin}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Float\-To\-Bin}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Float\-To\-Bin (
+\begin{DoxyParamCaption}
+\item[{double}]{real}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_a821765c6f171934e27cdc1c29e02a232}
+
+
+Definition at line 104 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a1fce8e6a302472ee0d00626ad3d3a206}{\index{floatpoint.\-c@{floatpoint.\-c}!Int\-To\-Bin@{Int\-To\-Bin}}
+\index{Int\-To\-Bin@{Int\-To\-Bin}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Int\-To\-Bin}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Int\-To\-Bin (
+\begin{DoxyParamCaption}
+\item[{double}]{real}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_a1fce8e6a302472ee0d00626ad3d3a206}
+
+\begin{DoxyParams}{Parameters}
+{\em real} & Nœmero representado pelo conjunto dos nœmeros reais \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Nœmero transformado para bin‡rio 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_ac8b4abb0190681f3b1eb11510fc2ca8f}{\index{floatpoint.\-c@{floatpoint.\-c}!Inv\-String@{Inv\-String}}
+\index{Inv\-String@{Inv\-String}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Inv\-String}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Inv\-String (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{string}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_ac8b4abb0190681f3b1eb11510fc2ca8f}
+
+\begin{DoxyParams}{Parameters}
+{\em string} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 43 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_ab65350db292fb3d14b89f864b8c0563e}{\index{floatpoint.\-c@{floatpoint.\-c}!Normalize@{Normalize}}
+\index{Normalize@{Normalize}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Normalize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf normbin} Normalize (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{bin, }
+\item[{int}]{prec}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_ab65350db292fb3d14b89f864b8c0563e}
+
+
+Definition at line 198 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a634331d6e2228c9925071838ba7a158e}{\index{floatpoint.\-c@{floatpoint.\-c}!Real\-To\-Float\-Point@{Real\-To\-Float\-Point}}
+\index{Real\-To\-Float\-Point@{Real\-To\-Float\-Point}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{Real\-To\-Float\-Point}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Real\-To\-Float\-Point (
+\begin{DoxyParamCaption}
+\item[{double}]{num, }
+\item[{int}]{prec}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_a634331d6e2228c9925071838ba7a158e}
+
+
+Definition at line 270 of file floatpoint.\-c.
+
+\hypertarget{floatpoint_8c_a35f709eb3c8d77837cdfbd4bc97918bb}{\index{floatpoint.\-c@{floatpoint.\-c}!String\-To\-Double@{String\-To\-Double}}
+\index{String\-To\-Double@{String\-To\-Double}!floatpoint.c@{floatpoint.\-c}}
+\subsubsection[{String\-To\-Double}]{\setlength{\rightskip}{0pt plus 5cm}float String\-To\-Double (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{in}
+\end{DoxyParamCaption}
+)}}\label{floatpoint_8c_a35f709eb3c8d77837cdfbd4bc97918bb}
+
+
+Definition at line 62 of file floatpoint.\-c.
+

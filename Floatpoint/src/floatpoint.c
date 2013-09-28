@@ -5,22 +5,43 @@
  *      Author: flavioipiranga
  */
 
+/*! \mainpage My Personal Index Page
+ *
+ * \section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: Opening the box
+ *
+ * etc...
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
+#include <gmp.h>
 
 #define BIT0  "0"
 #define BIT1  "1"
 #define SVIES  127
 #define DVIES  1023
+#define SSIGN  23
+#define DSIGN  52
 #define SPREC  1
 #define DPREC  2
 
 typedef struct Normbin{
 	char *exp;
 	char *bin;
+	int sinal;
 }normbin;
-
+/**
+ *
+ * @param string
+ * @return
+ */
 //Apenas inverte uma string
 char* InvString(char* string){
 	int tam =0, j, i;
@@ -41,25 +62,36 @@ char* InvString(char* string){
 }
 
 //Recebe a string contendo o numero real e transforma para tipo double
-double StringToDouble(char* in){
+float StringToDouble(char* in){
 	double num;
 
 	sscanf(in, "%lf", &num);
 
 	return num;
 }
+/**
+ *
+ * @param real Nœmero representado pelo conjunto dos nœmeros reais
+ * @return 	Nœmero transformado para bin‡rio
+ */
+char* IntToBin(long int real, int prec){
+	int sign;
 
-char* IntToBin(double real){
+	if(prec == SPREC)
+		sign = SSIGN;
+	else sign = DSIGN;
 
-	char* bin = malloc(sizeof(char)*33);
+	char* bin = malloc(sizeof(char)*(sign+2));
 
-	int deci, i;
+	int i;
+
+	long int deci;
 	deci = real;
 
 	if(deci == 0)
 		strcat(bin, BIT0);
 
-	for(i = 0; i<32; i++){
+	for(i = 0; i<sign+2; i++){
 		if(deci == 0)
 			break;
 
@@ -105,37 +137,50 @@ char* FloatToBin (double real) {
 	return bin;
 }
 
-char* ExpToBinSimple (int exp, int prec){
-	int i, max;
-	char* bin = malloc(sizeof(char)*33);
 
-	if(prec == SPREC)
+
+char* ExpToBin (int exp, int prec){
+	int i, max;
+	char *bin;
+
+	if(prec == SPREC){
 		max = 8;
 
-	if(prec == DPREC)
+	}
+	if(prec == DPREC){
 		max = 11;
 
+	}
+
+	bin =malloc(sizeof(char)*max);
+	printf("expoente %d\n", exp);
 
 	for(i = 0; i<max; i++){
 
 		if(exp%2)
-			bin[i] = '1';
-		else bin[i] = '0';
+			strcat(bin,"1");
+		else strcat(bin,"0");
 
 		exp = exp/2;
 	}
 
 	strcpy(bin, InvString(bin));
 
-
 	return bin;
 }
 
-normbin Normalize(char* bin, int prec){
+normbin Normalize(char* bin, int prec, int sinal, int expoente){
 
 	normbin nbin;
 	char *p, *bexp, auxs, *aux;
-	int pos = 0, exp=0, i, j;
+	int pos = 0, exp = expoente, i, j;
+
+	realloc(bin, sizeof(char)*1);
+
+	strcat(bin, ".");
+	printf("lala bin %s\n", bin);
+
+	nbin.sinal = sinal;
 
 	if(bin[0] == '0'){
 		while(bin[0] == '0'){
@@ -177,7 +222,7 @@ normbin Normalize(char* bin, int prec){
 			fprintf(stderr, "Memoria insuficiente");
 			exit(EXIT_FAILURE);
 		}
-		nbin.exp = ExpToBinSimple(exp, prec);
+		nbin.exp = ExpToBin(exp, prec);
 
 		if(!(nbin.bin = malloc(sizeof(char)*23)))
 		{
@@ -193,7 +238,7 @@ normbin Normalize(char* bin, int prec){
 		exp = exp+DVIES;
 
 		nbin.exp = malloc(sizeof(char)*12);
-		nbin.exp = ExpToBinSimple(exp, prec);
+		nbin.exp = ExpToBin(exp, prec);
 		nbin.bin = malloc(sizeof(char)*52);
 
 		strncpy(nbin.bin, &bin[2], sizeof(char)*52);
@@ -203,62 +248,111 @@ normbin Normalize(char* bin, int prec){
 	return nbin;
 }
 
-char* RealToFloatPoint(double num, int prec){
-	char *binint, *binfra;
-	char *bin;
-	char *bsig, *binfp;
-	normbin nbin;
+void BigNumToBin(char* num, int prec){
 
-	if(prec == 1)
-		binfp = malloc(sizeof(char)*33);
+	mpz_t q,r, dividendo, divisor, suplimit, inflimit, sign;
 
-	if(prec == 2)
-		binfp = malloc(sizeof(char)*65);
+	mpz_init(q);
+	mpz_init(suplimit);
+	mpz_init(inflimit);
 
-	if(num < 0){
-		num = num * -1;
-		bsig = "1";
-	}
+	mpz_init(sign);
 
-	else bsig = "0";
+	mpz_init(r);
+	mpz_init(dividendo);
+	mpz_init(divisor);
 
-	binint = malloc(sizeof(char)*33);
-	binfra = malloc(sizeof(char)*33);
-
-	bin = malloc(sizeof(char)*66);
-
-	binint = IntToBin(num);
-	strcat(bin,binint);
-	free(binint);
-
-	strcat(bin,".");
-
-	binfra = FloatToBin(num);
-	strcat(bin,binfra);
-	free(binfra);
+	int tam;
 
 	if(prec == SPREC){
-		nbin.bin = malloc(sizeof(char)*24);
-		nbin.exp = malloc(sizeof(char)*9);
 
-		nbin = Normalize(bin, prec);
+		tam = 23;
 
 	}
 
-	if(prec == DPREC){
-		nbin.bin = malloc(sizeof(char)*53);
-		nbin.exp = malloc(sizeof(char)*12);
+	else{
+		tam =52;
 
-		nbin = Normalize(bin, prec);
 	}
-	free(bin);
+	char *in = malloc(sizeof(char)*tam);
+	char *frac = malloc(sizeof(char)*tam);
 
-	strcat(binfp, bsig);
-	strcat(binfp, nbin.exp);
-	strcat(binfp, nbin.bin);
+	int pos, i=0;
+	char *p = malloc(sizeof(char)*2);
 
-	return binfp;
+	normbin nb;
+	int sinal, exp=0;
 
+	if(num[0] == '-'){
+		sinal = 1;
+		num[0] = '0';
+	}
+	else sinal = 0;
+
+	printf("STRING NUM %s\n", num);
+
+
+	if(strchr(num, '.') != NULL){
+		p =  strchr(num, '.');
+		pos = p-num;
+
+		strncpy(in, &num[0], sizeof(char)*(pos));
+		strncpy(frac, &num[pos+1], sizeof(char) * (strlen(num) - pos));
+
+		if((strlen(in)+strlen(frac)) > tam){
+			printf("numero grande\n");
+		}
+		else{
+			num = in;
+			strcat(num, frac);
+			mpz_set_str(sign, num, 10);
+			mpz_ui_pow_ui(divisor, 10, strlen(frac));
+
+		}
+
+	}
+	else{
+		mpz_set_str(sign, num, 10);
+		mpz_ui_pow_ui(divisor, 10, 0);
+	}
+
+	mpz_ui_pow_ui(inflimit, 2, tam);
+	mpz_ui_pow_ui(suplimit, 2, tam+1);
+	mpz_sub_ui(suplimit, suplimit, 1);
+
+
+	mpz_tdiv_q(q, sign, divisor);
+	gmp_printf ("numero%Zd %Zd\n", sign, divisor);
+
+	while(mpz_cmp(q, inflimit)<0){
+		mpz_mul_ui(sign, sign, 2);
+		mpz_tdiv_q(q, sign, divisor);
+		exp--;
+	}
+
+	while(mpz_cmp(q, suplimit)>0){
+		mpz_tdiv_q_ui(sign, sign, 2);
+		mpz_tdiv_q(q, sign, divisor);
+		exp++;
+	}
+
+
+	mpz_tdiv_q(sign, sign, divisor);
+	gmp_printf("%Zd %Zd\n", sign, divisor);
+
+	//printf("%ld tam %lu", mpz_get_si(sign), sizeof(int)*1);
+
+	printf("Resultado %s\n", IntToBin(mpz_get_si(sign), prec));
+
+	printf("sinal aqui %d\n", nb.sinal);
+	nb = Normalize(IntToBin(mpz_get_si(sign), prec), prec, sinal, exp);
+
+	printf("SINAL:%d EXPOENTE:%s SIGNIFICANTE:%s\n", nb.sinal, nb.exp, nb.bin);
+
+
+	/* free used memory */
+	mpz_clear(dividendo);
+	mpz_clear(divisor);
+	mpz_clear(q);
+	mpz_clear(r);
 }
-
-
