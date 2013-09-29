@@ -1,4 +1,4 @@
-SRC = /Users/flavioipiranga/git/floatpoint/Floatpoint/src/
+SRC = src/
 OBJ_DIR = /Users/flavioipiranga/git/floatpoint/Floatpoint/
 all:main
 	cd ./src	; $(MAKE) clean

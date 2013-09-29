@@ -41,9 +41,11 @@ int main(int argc, char** argv) {
 	printf("2) Precisao dupla\n");
 	scanf("%d", &prec);
 
-	BigNumToBin(in, prec);
+	//BigNumToBin(in, prec);
 
-	BinToNum("00111111111111111111111111111111");
+	//BinToNum("00111111111111111111111111111111");
+
+	Add("-3", "-3", 1);
 	return (EXIT_SUCCESS);
 }
 //21321312321312321321312
