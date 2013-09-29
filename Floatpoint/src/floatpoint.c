@@ -188,8 +188,8 @@ normbin Normalize(char* bin, int prec, int sinal, int expoente){
 	int pos = 0, exp = expoente, i, j;
 
 	if(strchr(bin, '.') == NULL){
-	realloc(bin, sizeof(char)*1);
-	strcat(bin, ".");
+		realloc(bin, sizeof(char)*1);
+		strcat(bin, ".");
 	}
 
 	nbin.sinal = sinal;
@@ -264,6 +264,7 @@ normbin BigNumToBin(char* num, int prec){
 
 	mpz_t q,r, dividendo, divisor, suplimit, inflimit, sign;
 
+
 	mpz_init(q);
 	mpz_init(suplimit);
 	mpz_init(inflimit);
@@ -274,32 +275,28 @@ normbin BigNumToBin(char* num, int prec){
 	mpz_init(dividendo);
 	mpz_init(divisor);
 
-	int tam;
+	int tam=0;
 
 	if(prec == SPREC){
-
 		tam = 23;
-
 	}
 
 	else{
 		tam =52;
-
 	}
-	char *in = malloc(sizeof(char)*tam);
-	char *frac = malloc(sizeof(char)*tam);
 
-	int pos, i=0;
-	char *p = malloc(sizeof(char)*2);
-
-	normbin nb;
-	int sinal, exp=0;
+	int sinal=0, exp=0;
 
 	if(num[0] == '-'){
 		sinal = 1;
 		num[0] = '0';
 	}
-	else sinal = 0;
+	char *in = malloc(sizeof(char)*311);
+	char *frac = malloc(sizeof(char)*311);
+
+	int pos, i=0;
+	char *p = malloc(sizeof(char)*2);
+	normbin nb;
 
 
 	if(strchr(num, '.') != NULL){
@@ -309,17 +306,11 @@ normbin BigNumToBin(char* num, int prec){
 		strncpy(in, &num[0], sizeof(char)*(pos));
 		strncpy(frac, &num[pos+1], sizeof(char) * (strlen(num) - pos));
 
-		if((strlen(in)+strlen(frac)) > tam){
-			printf("numero grande\n");
-		}
-		else{
-			num = in;
-			strcat(num, frac);
-			mpz_set_str(sign, num, 10);
-			mpz_ui_pow_ui(divisor, 10, strlen(frac));
 
-		}
-
+		num = in;
+		strcat(num, frac);
+		mpz_set_str(sign, num, 10);
+		mpz_ui_pow_ui(divisor, 10, strlen(frac));
 	}
 	else{
 		mpz_set_str(sign, num, 10);
@@ -345,10 +336,9 @@ normbin BigNumToBin(char* num, int prec){
 		exp++;
 	}
 
-
 	mpz_tdiv_q(sign, sign, divisor);
 
-	//printf("%ld tam %lu", mpz_get_si(sign), sizeof(int)*1);
+	printf("%ld tam %lu", mpz_get_si(sign), sizeof(int)*1);
 
 	nb = Normalize(IntToBin(mpz_get_si(sign), prec), prec, sinal, exp);
 
@@ -364,8 +354,15 @@ normbin BigNumToBin(char* num, int prec){
 double BinToNum(char* bin){
 	int tamexp, tamsign, i, sinal;
 
-	int exp = 0, e, vies;
+	int  vies;
+	int e;
 	double sign, num;
+
+
+	double exp =0 ;
+
+	char* out= malloc(sizeof(char)*312);
+
 	if(bin[0] == '0')
 		sinal = 0;
 	else sinal = 1;
@@ -383,22 +380,18 @@ double BinToNum(char* bin){
 	for(i=1, e=7; i<tamexp+1; i++, e--){
 		if(bin[i] == '1'){
 			exp = exp + pow(2, e);
-
 		}
 	}
 
 	for(i=9, e=1; i<strlen(bin); i++, e++){
 		if(bin[i] == '1'){
 			sign = sign + 1/pow(2, e);
+
 		}
 
 	}
-
 	num = pow(-1, sinal)*pow(2, exp-127)*(1+sign);
-
-
 	return num;
-
 }
 
 void Add(char* in1, char* in2, int prec){
@@ -507,6 +500,6 @@ void Add(char* in1, char* in2, int prec){
 	strcat(aux, fp.exp);
 	strcat(aux, fp.bin);
 
-	//printf("saida %.16lf", BinToNum(aux));
+	printf("saida %.16lf", BinToNum(aux));
 
 }
