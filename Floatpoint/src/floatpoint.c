@@ -71,8 +71,8 @@ float StringToDouble(char* in){
 }
 /**
  *
- * @param real Nœmero representado pelo conjunto dos nœmeros reais
- * @return 	Nœmero transformado para bin‡rio
+ * @param real Nï¿½mero representado pelo conjunto dos nï¿½meros reais
+ * @return 	Nï¿½mero transformado para binï¿½rio
  */
 char* IntToBin(long int real, int prec){
 	int sign;
@@ -188,7 +188,7 @@ normbin Normalize(char* bin, int prec, int sinal, int expoente){
 	int pos = 0, exp = expoente, i, j;
 
 	if(strchr(bin, '.') == NULL){
-		realloc(bin, sizeof(char)*1);
+		bin = realloc(bin, sizeof(char)*1);
 		strcat(bin, ".");
 	}
 

@@ -5,7 +5,7 @@ all:main
 	cd ./src	; $(MAKE)
 	
 main: main.o $(SRC)floatpoint.o
-	gcc -o executavel main.o $(SRC)floatpoint.o -lgmp 
+	gcc -o executavel main.o $(SRC)floatpoint.o -lgmp -lm
 
 main.o: main.c $(SRC)floatpoint.h
 	gcc -o main.o -c main.c
