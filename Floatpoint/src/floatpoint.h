@@ -14,5 +14,5 @@ float StringToDouble(char* in);
 char* ExpToBin (int exp, int prec);
 normbin Normalize(char* bin, int prec, int sinal, int expoente);
 double BinToNum(char* bin);
-void Add(char* num1, char* num2, int prec);
+double Add(char* num1, char* num2, int prec);
 

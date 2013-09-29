@@ -15,6 +15,13 @@
  *
  */
 
+#define STAMNUM  43
+#define DTAMNUM  313
+#define SPTAM  33
+#define DPTAM  65
+#define SPREC  1
+#define DPREC  2
+
 
 int main(int argc, char** argv) {
 	//char *in;
@@ -25,22 +32,22 @@ int main(int argc, char** argv) {
 	int op;
 	normbin nb;
 
-	/*if(!(in1 = malloc(sizeof(char)*312)))
+	if(!(in1 = malloc(sizeof(char)*1)))
 	{
 		fprintf(stderr, "Memoria insuficiente");
 		exit(EXIT_FAILURE);
 	}
 
-	if(!(in2 = malloc(sizeof(char)*312)))
+	if(!(in2 = malloc(sizeof(char)*1)))
 	{
 		fprintf(stderr, "Memoria insuficiente");
 		exit(EXIT_FAILURE);
-	}*/
+	}
 
 	do{
-		printf("Bem-vindo ao software FP.\n\n\n");
+		printf("Bem-vindo ao software FP.\n\n");
 
-		printf("Menu de opcoes:\n");
+		printf("Menu de opcoes:\n\n");
 		printf("(1) Converter numero para binario.\n");
 		printf("(2) Converter binario para numero.\n");
 		printf("(3) Converter precisao simples para precisao dupla.\n");
@@ -50,7 +57,7 @@ int main(int argc, char** argv) {
 		printf("(7) Multiplicacao.\n");
 		printf("(8) Divisao.\n");
 		printf("(9) Raiz quadrada.\n");
-		printf("(0) Sair.\n");
+		printf("(0) Sair.\n\n");
 
 		printf("Digite sua opcao:");
 		scanf("%d", &op);
@@ -64,14 +71,17 @@ int main(int argc, char** argv) {
 			scanf("%d", &prec);
 
 			if(prec == 1){
-				in1 = realloc(in1, sizeof(char)*43);
+				in1 = realloc(in1, sizeof(char)*STAMNUM);
 			}
-			else in1 = realloc(in1, sizeof(char)*313);
+			else in1 = realloc(in1, sizeof(char)*DTAMNUM);
 
 			printf("Digite o numero real que deseja converter para binario:\n");
 			scanf("%s", in1);
 
 			nb = BigNumToBin(in1, prec);
+
+			//if((strcmp(nb.bin, "00000000000000000000000") == 0 || strcmp(nb.bin, "0000000000000000000000000000000000000000000000000000") == 0))
+
 			printf("Sinal: %d Expoente: %s Significante: %s\n", nb.sinal, nb.exp, nb.bin);
 			printf("%d%s%s\n", nb.sinal, nb.exp, nb.bin);
 			break;
@@ -83,9 +93,9 @@ int main(int argc, char** argv) {
 			scanf("%d", &prec);
 
 			if(prec == 1){
-				in1 = realloc(in1, sizeof(char)*33);
+				in1 = realloc(in1, sizeof(char)*SPTAM);
 			}
-			else in1 = realloc(in1, sizeof(char)*65);
+			else in1 = realloc(in1, sizeof(char)*DPTAM);
 
 			printf("Digite o numero binario que deseja converter para real:\n");
 			scanf("%s", in1);
@@ -93,12 +103,32 @@ int main(int argc, char** argv) {
 			r = BinToNum(in1);
 			printf("Numero eh igual %.16lf\n", r);
 			break;
+
+
+		case 5:
+			printf("Escolha precisao:\n");
+			printf("1) Precisao simples\n");
+			printf("2) Precisao dupla\n");
+			scanf("%d", &prec);
+
+			if(prec == 1){
+				in1 = realloc(in1, sizeof(char)*STAMNUM);
+				in2 = realloc(in2, sizeof(char)*STAMNUM);
+			}
+			else {
+				in1 = realloc(in1, sizeof(char)*DTAMNUM);
+				in2 = realloc(in2, sizeof(char)*DTAMNUM);
+			}
+
+			printf("Digite o primeiro numero:\n");
+			scanf("%s", in1);
+			printf("Digite o segundo numero:\n");
+			scanf("%s", in2);
+
+			Add(in1, in2, prec);
+			break;
 		}
-
 	}while(op!=0);
-
-
-
 
 	//BigNumToBin(in, prec);
 
@@ -106,7 +136,6 @@ int main(int argc, char** argv) {
 
 	//BinToNum("00111111111111111111111111111111");
 
-	//Add(in1, in1, 1);
 	return (EXIT_SUCCESS);
 }
 //21321312321312321321312

@@ -338,8 +338,6 @@ normbin BigNumToBin(char* num, int prec){
 
 	mpz_tdiv_q(sign, sign, divisor);
 
-	printf("%ld tam %lu", mpz_get_si(sign), sizeof(int)*1);
-
 	nb = Normalize(IntToBin(mpz_get_si(sign), prec), prec, sinal, exp);
 
 	/* free used memory */
@@ -394,7 +392,7 @@ double BinToNum(char* bin){
 	return num;
 }
 
-void Add(char* in1, char* in2, int prec){
+double Add(char* in1, char* in2, int prec){
 
 	char *num1, *num2, *aux;
 	char carry = '0';
@@ -501,5 +499,6 @@ void Add(char* in1, char* in2, int prec){
 	strcat(aux, fp.bin);
 
 	printf("saida %.16lf", BinToNum(aux));
+	return BinToNum(aux);
 
 }
