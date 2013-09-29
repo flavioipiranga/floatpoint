@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
+	printf("teads");
 	do{
 		printf("Bem-vindo ao software FP.\n\n");
 
