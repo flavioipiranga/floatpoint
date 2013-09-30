@@ -72,14 +72,28 @@ int main(int argc, char** argv) {
 			scanf("%d", &prec);
 
 			if(prec == 1){
-				in1 = realloc(in1, sizeof(char)*STAMNUM);
+				in1 = realloc(in1, sizeof(char)*100);
+				nb.exp =malloc(sizeof(char)*9) ;
+				nb.bin =malloc(sizeof(char)*24);
+				nb.sinal = 0;
+				nb.exp = "\0";
+				nb.bin = "\0";
 			}
-			else in1 = realloc(in1, sizeof(char)*DTAMNUM);
+			else {
+				in1 = realloc(in1, sizeof(char)*DTAMNUM);
+				nb.exp =malloc(sizeof(char)*12);
+				nb.bin =malloc(sizeof(char)*53);
+				nb.sinal = 0;
+				nb.exp = "\0";
+				nb.bin = "\0";
+			}
 
 			printf("Digite o numero real que deseja converter para binario:\n");
 			scanf("%s", in1);
 
-			nb = BigNumToBin(in1, prec);
+			if(!(NumToFp(&nb, in1, prec))){
+				printf("trata excecao");
+			}
 
 			//if((strcmp(nb.bin, "00000000000000000000000") == 0 || strcmp(nb.bin, "0000000000000000000000000000000000000000000000000000") == 0))
 
@@ -101,7 +115,7 @@ int main(int argc, char** argv) {
 			printf("Digite o numero binario que deseja converter para real:\n");
 			scanf("%s", in1);
 
-			r = BinToNum(in1);
+			r = FpToNum(in1);
 			printf("Numero eh igual %.16lf\n", r);
 			break;
 
@@ -128,6 +142,55 @@ int main(int argc, char** argv) {
 
 			Add(in1, in2, prec);
 			break;
+
+		case 6:
+
+			printf("Escolha precisao:\n");
+			printf("1) Precisao simples\n");
+			printf("2) Precisao dupla\n");
+			scanf("%d", &prec);
+
+			if(prec == 1){
+				in1 = realloc(in1, sizeof(char)*STAMNUM);
+				in2 = realloc(in2, sizeof(char)*STAMNUM);
+			}
+			else {
+				in1 = realloc(in1, sizeof(char)*DTAMNUM);
+				in2 = realloc(in2, sizeof(char)*DTAMNUM);
+			}
+
+			printf("Digite o primeiro numero:\n");
+			scanf("%s", in1);
+			printf("Digite o segundo numero:\n");
+			scanf("%s", in2);
+
+			Sub(in1, in2, prec);
+			break;
+		case 7:
+
+			printf("Escolha precisao:\n");
+			printf("1) Precisao simples\n");
+			printf("2) Precisao dupla\n");
+			scanf("%d", &prec);
+
+			if(prec == 1){
+				in1 = realloc(in1, sizeof(char)*STAMNUM);
+				in2 = realloc(in2, sizeof(char)*STAMNUM);
+			}
+			else {
+				in1 = realloc(in1, sizeof(char)*DTAMNUM);
+				in2 = realloc(in2, sizeof(char)*DTAMNUM);
+			}
+
+			printf("Digite o primeiro numero:\n");
+			scanf("%s", in1);
+			printf("Digite o segundo numero:\n");
+			scanf("%s", in2);
+
+			Multiplication(in1, in2, prec);
+			break;
+
+
 		}
 	}while(op!=0);
 

@@ -9,10 +9,10 @@ typedef struct Normbin{
 char* InvString(char* string);
 char* IntToBin(long int real, int prec);
 char* FloatToBin(double real);
-normbin BigNumToBin(char* num1, int prec);
+int NumToFp(normbin *nb, char* num1, int prec);
 float StringToDouble(char* in);
 char* ExpToBin (int exp, int prec);
-normbin Normalize(char* bin, int prec, int sinal, int expoente);
-double BinToNum(char* bin);
+int Normalize(normbin *nb, char* bin, int prec, int sinal, int expoente);
+double FpToNum(char* bin);
 double Add(char* num1, char* num2, int prec);
 
