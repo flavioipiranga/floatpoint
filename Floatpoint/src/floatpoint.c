@@ -60,7 +60,6 @@ char* InvString(char* string){
 	return aux;
 
 }
-
 //Recebe a string contendo o numero real e transforma para tipo double
 float StringToDouble(char* in){
 	double num;
@@ -81,7 +80,7 @@ char* IntToBin(long int real, int prec){
 		sign = SSIGN;
 	else sign = DSIGN;
 
-	char* bin = malloc(sizeof(char)*(sign+2));
+	char* bin = malloc(sizeof(char)*(sign+1+1));
 
 	int i;
 
@@ -108,10 +107,8 @@ char* IntToBin(long int real, int prec){
 
 	return bin;
 }
-
 int BinToInt(char *bin){
 
-	printf("bin %s\n", bin);
 	int i, j, num=0;
 	for(i = strlen(bin)-1, j=0; i>=0; i--, j++){
 		if(bin[i] == '1')
@@ -121,12 +118,10 @@ int BinToInt(char *bin){
 	return num;
 
 }
-
 char* ExpToBin (int exp, int prec){
 	int i, max;
 	char *bin;
 
-	printf("expoente %d\n",exp );
 	if(prec == SPREC){
 		max = 8;
 
@@ -148,26 +143,30 @@ char* ExpToBin (int exp, int prec){
 	}
 
 	strcpy(bin, InvString(bin));
-	printf("bin exxp%s", bin);
 	return bin;
 }
-
 int Normalize(normbin *nbin, char* bin, int prec, int sinal, int expoente){
 
 	char *p, *bexp, auxs, *aux;
-	int pos = 0, exp = expoente, i, j;
+	int pos = 0, exp = expoente, i, j, qntd = 0;
+
 
 	if(strchr(bin, '.') == NULL){
-		bin = realloc(bin, sizeof(char)*1);
+		bin = realloc(bin, sizeof(char)*(strlen(bin)+1+1));
 		strcat(bin, ".");
 	}
 
+	if(bin[0] == '0' && (bin[1] == '0' || bin[1] == '1') && bin[2] == '.' && strchr(bin, '1')!=NULL){
+		for(i = 0; i<=strlen(bin)+1; i++){
+			bin[i] = bin[i+1];
+		}
+
+	}
 	nbin->sinal = sinal;
 	/*
 	 * tratar excecao do numero zero, pois nao tem como normalizar
 	 */
-	printf("bin de entrada %s\n", bin);
-	printf("expoente %d\n", expoente);
+
 	if(bin[0] == '0' && bin[1] == '.' && strchr(bin, '1')!=NULL){
 		while(bin[0] == '0'){
 
@@ -203,8 +202,24 @@ int Normalize(normbin *nbin, char* bin, int prec, int sinal, int expoente){
 
 	if(prec == SPREC){
 
-		exp = exp+SVIES;
+		for(i=2; i<strlen(bin); i++){
+			if(bin[i] == '0' || bin[i] == '1')
+				qntd++;
+		}
 
+		while(qntd <= SSIGN){
+			strcat(bin, "0");
+			qntd++;
+		}
+
+
+		exp = exp+SVIES;
+		if(exp > 254){
+			exp = 255;
+		}
+		if(exp < 1){
+			exp = 0;
+		}
 		if(!(nbin->exp = malloc(sizeof(char)*9)))
 		{
 			fprintf(stderr, "Memoria insuficiente");
@@ -225,7 +240,22 @@ int Normalize(normbin *nbin, char* bin, int prec, int sinal, int expoente){
 	}
 
 	if(prec == DPREC){
+		for(i=2; i<strlen(bin); i++){
+			if(bin[i] == '0' || bin[i] == '1')
+				qntd++;
+		}
+
+		while(qntd <= DSIGN){
+			strcat(bin, "0");
+			qntd++;
+		}
 		exp = exp+DVIES;
+		if(exp > 2046){
+			exp = 2047;
+		}
+		if(exp < 1){
+			exp = 0;
+		}
 
 		nbin->exp = malloc(sizeof(char)*12);
 		nbin->exp = ExpToBin(exp, prec);
@@ -234,24 +264,16 @@ int Normalize(normbin *nbin, char* bin, int prec, int sinal, int expoente){
 		p =  strchr(bin, '.');
 		pos = p-bin;
 		strncpy(nbin->bin, &bin[pos+1], sizeof(char)*52);
-
 	}
-
-
 	return 1;
 }
-
 int NumToFp(normbin *nb, char* num, int prec){
-
 	mpz_t q,r, dividendo, divisor, suplimit, inflimit, sign;
-
 
 	mpz_init(q);
 	mpz_init(suplimit);
 	mpz_init(inflimit);
-
 	mpz_init(sign);
-
 	mpz_init(r);
 	mpz_init(dividendo);
 	mpz_init(divisor);
@@ -278,14 +300,12 @@ int NumToFp(normbin *nb, char* num, int prec){
 	int pos, i=0;
 	char *p = malloc(sizeof(char)*2);
 
-
 	if(strchr(num, '.') != NULL){
 		p =  strchr(num, '.');
 		pos = p-num;
 
 		strncpy(in, &num[0], sizeof(char)*(pos));
 		strncpy(frac, &num[pos+1], sizeof(char) * (strlen(num) - pos));
-
 
 		num = in;
 		strcat(num, frac);
@@ -320,7 +340,6 @@ int NumToFp(normbin *nb, char* num, int prec){
 
 	Normalize(nb, IntToBin(mpz_get_si(sign), prec), prec, sinal, exp);
 
-
 	/* free used memory */
 	mpz_clear(dividendo);
 	mpz_clear(divisor);
@@ -336,16 +355,19 @@ int NumToFp(normbin *nb, char* num, int prec){
 	}
 	else if(strchr(nb->exp, '1') == NULL && strchr(nb->bin, '1') != NULL ){
 		printf("Denormalized number");
+		return 0;
 	}else if(strchr(nb->exp, '1') == NULL && strchr(nb->bin, '1') == NULL){
 		if(nb->sinal == 1){
-			printf("zero negativo");
-
-		}else printf("zero negativo");
+			printf("negative zero");
+			return 0;
+		}else {
+			printf("positive zero");
+			return 0;
+		}
 	}
 
 	return 1;
 }
-
 double FpToNum(char* bin){
 	int tamexp, tamsign, i, sinal;
 
@@ -374,23 +396,147 @@ double FpToNum(char* bin){
 	}
 
 
-	for(i=1, e=7; i<tamexp+1; i++, e--){
+	for(i=1, e=tamexp-1; i<tamexp+1; i++, e--){
 		if(bin[i] == '1'){
 			exp = exp + pow(2, e);
 		}
 	}
 
-	for(i=9, e=1; i<strlen(bin); i++, e++){
+	for(i=tamexp+1, e=1; i<strlen(bin); i++, e++){
 		if(bin[i] == '1'){
 			sign = sign + 1/pow(2, e);
 
 		}
 
 	}
-	num = pow(-1, sinal)*pow(2, exp-127)*(1+sign);
+	num = pow(-1, sinal)*pow(2, exp-vies)*(1+sign);
 	return num;
 }
 
+int SimpleFpToDoubleFp(normbin *nb, char *in){
+
+	char *num = malloc(sizeof(char)*100);
+	sprintf(num, "%lf",FpToNum(in));
+	NumToFp(nb, num, 2);
+
+	return 1;
+}
+
+int FpCmp(char* in1, char* in2, int prec){
+	normbin nb1, nb2;
+	int tamsign, i;
+
+	if(prec == 1){
+		tamsign = SSIGN;
+		nb1.exp =malloc(sizeof(char)*9) ;
+		nb1.bin =malloc(sizeof(char)*24);
+		nb1.sinal = 0;
+		nb1.exp = "\0";
+		nb1.bin = "\0";
+		nb2.exp =malloc(sizeof(char)*9) ;
+		nb2.bin =malloc(sizeof(char)*24);
+		nb2.sinal = 0;
+		nb2.exp = "\0";
+		nb2.bin = "\0";
+	}
+	else {
+		tamsign = DSIGN;
+		nb1.exp =malloc(sizeof(char)*12);
+		nb1.bin =malloc(sizeof(char)*53);
+		nb1.sinal = 0;
+		nb1.exp = "\0";
+		nb1.bin = "\0";
+		nb2.exp =malloc(sizeof(char)*12);
+		nb2.bin =malloc(sizeof(char)*53);
+		nb2.sinal = 0;
+		nb2.exp = "\0";
+		nb2.bin = "\0";
+	}
+
+	NumToFp(&nb1, in1, prec);
+	NumToFp(&nb2, in2, prec);
+
+	char *frac1 = malloc(sizeof(char)*(tamsign+2+1));
+	char *frac2 = malloc(sizeof(char)*(tamsign+2+1));
+
+	strcat(frac1, "1.");
+	strcat(frac2, "1.");
+	strcat(frac1, nb1.bin);
+	strcat(frac2, nb2.bin);
+
+	/*
+	 * Logica inversa, pois na matematica 0<1, no caso do jogo de sinais 0>1
+	 */
+	if(nb1.sinal != nb2.sinal){
+		if(nb1.sinal < nb2.sinal){
+			return 1;
+		}else return -1;
+	}else{
+		/*
+		 * Igualando expoentes
+		 */
+		if(strcmp(nb1.exp, nb2.exp) < 0){
+			int exp1, exp2;
+			exp1 = BinToInt(nb1.exp);
+			exp2 = BinToInt(nb2.exp);
+
+			while(exp1 < exp2 ){
+
+				for(i = tamsign+1; i>=0; i-- ){
+					if(i == 2){
+						frac1[i] = frac1[0];
+					}else if(i==1)
+						frac1[i] = '.';
+
+					else if(i ==0){
+						frac1[i] = '0';
+					}else frac1[i] = frac1[i-1];
+				}
+				exp1++;
+			}
+
+			nb1.exp = ExpToBin(exp1, prec);
+		}
+
+		else if(strcmp(nb1.exp, nb2.exp) > 0){
+			int exp1, exp2;
+			exp1 = BinToInt(nb1.exp);
+			exp2 = BinToInt(nb2.exp);
+
+			while(exp1 > exp2 ){
+
+				for(i = tamsign+1; i>=0; i-- ){
+					if(i == 2){
+						frac2[i] = frac2[0];
+					}else if(i==1)
+						frac2[i] = '.';
+
+					else if(i ==0){
+						frac2[i] = '0';
+					}else frac2[i] = frac2[i-1];
+				}
+				exp2++;
+			}
+
+			nb2.exp = ExpToBin(exp2, prec);
+		}
+
+		if(nb1.sinal == 0){
+			return strcmp(frac1, frac2);
+		}
+
+
+		else{
+			if(strcmp(frac1, frac2) > 0 )
+				return -1;
+			else if(strcmp(frac1, frac2) < 0){
+				return 1;
+			}else return 0;
+		}
+	}
+
+
+}
 double Add(char* in1, char* in2, int prec){
 
 	char *num1, *num2, *aux;
@@ -430,15 +576,14 @@ double Add(char* in1, char* in2, int prec){
 
 	sinal = nb1.sinal;
 
-	char *frac1 = malloc(sizeof(char)*(tamsign+3));
-	char *frac2 = malloc(sizeof(char)*(tamsign+3));
+	char *frac1 = malloc(sizeof(char)*(tamsign+2+1));
+	char *frac2 = malloc(sizeof(char)*(tamsign+2+1));
 
 	strcat(frac1, "1.");
 	strcat(frac2, "1.");
 	strcat(frac1, nb1.bin);
 	strcat(frac2, nb2.bin);
 
-	printf("frac1 %s exp %s frac2 %s exp %s", frac1, nb1.exp, frac2, nb2.exp);
 
 	if(strcmp(nb1.exp, nb2.exp) < 0){
 		int exp1, exp2;
@@ -486,13 +631,12 @@ double Add(char* in1, char* in2, int prec){
 		nb2.exp = ExpToBin(exp2, prec);
 	}
 
-	printf("frac1 %s exp %s frac2 %s exp %s", frac1, nb1.exp, frac2, nb2.exp);
 
 
 	char *result = malloc(sizeof(char)*(tamsign+3));
-	result[tamsign+2] = '\0';
+	result[tamsign+3] = '\0';
 
-	for(i = tamsign, j = tamsign+1; i>=0 ; i--, j--){
+	for(i = tamsign+1, j = tamsign+2; i>=0 ; i--, j--){
 		if(frac1[i] == '0' && frac2[i] == '0'){
 			if(carry == '0'){
 				result[j] = '0';
@@ -531,7 +675,7 @@ double Add(char* in1, char* in2, int prec){
 		}
 
 		if(i == 0){
-			if(carry == 1)
+			if(carry == '1')
 				result[i] = carry;
 			else{
 				strncpy(result, &result[1], sizeof(char)*(tamsign+1));
@@ -539,10 +683,10 @@ double Add(char* in1, char* in2, int prec){
 			}
 
 		}
+
 	}
-	printf("result %s", result);
+
 	Normalize(&fp, result, prec, sinal, BinToInt(nb1.exp)-vies);
-	printf("fp.sinal %d, fp.exp %s, fp.sign %s\n", fp.sinal, fp.exp, fp.bin);
 
 	if(fp.sinal)
 		strcat(aux, "1");
@@ -551,7 +695,6 @@ double Add(char* in1, char* in2, int prec){
 	strcat(aux, fp.exp);
 	strcat(aux, fp.bin);
 
-	printf("saida %.16lf\n", FpToNum(aux));
 	return FpToNum(aux);
 
 }
@@ -653,9 +796,9 @@ double Multiplication(char* in1, char* in2, int prec){
 
 
 	char *result = malloc(sizeof(char)*(tamsign+3));
-	result[tamsign+2] = '\0';
+	result[tamsign+3] = '\0';
 
-	for(i = tamsign, j = tamsign+1; i>=0 ; i--, j--){
+	for(i = tamsign+1, j = tamsign+2; i>=0 ; i--, j--){
 		if(frac1[i] == '0' && frac2[i] == '0'){
 			if(carry == '0'){
 				result[j] = '0';
@@ -694,7 +837,7 @@ double Multiplication(char* in1, char* in2, int prec){
 		}
 
 		if(i == 0){
-			if(carry == 1)
+			if(carry == '1')
 				result[i] = carry;
 			else{
 				strncpy(result, &result[1], sizeof(char)*(tamsign+1));
@@ -706,7 +849,6 @@ double Multiplication(char* in1, char* in2, int prec){
 
 	return 1.0;
 }
-
 double Sub(char* in1, char* in2, int prec){
 
 	char *num1, *num2, *aux;
@@ -731,7 +873,15 @@ double Sub(char* in1, char* in2, int prec){
 		aux = malloc(sizeof(char)*65);
 
 	}
-
+	/*
+	 * Caso de 3-5, fazer tratamento
+	 * if(FpCmp(in1, in2) == -1){
+				bsinal = nb2.;
+				fracaux = frac2;
+				frac2 = frac1;
+				frac1 = fracaux;
+			}
+	 */
 	num1 = malloc(sizeof(char)*tam);
 	num2 = malloc(sizeof(char)*tam);
 
@@ -747,7 +897,6 @@ double Sub(char* in1, char* in2, int prec){
 
 	char *frac1 = malloc(sizeof(char)*(tamsign+3+1));
 	char *frac2 = malloc(sizeof(char)*(tamsign+3+1));
-	printf("nbin1 %s exp %s nbin2 %s exp %s\n", nb1.bin, nb1.exp, nb2.bin, nb2.exp);
 
 	strcat(frac1, "1.");
 	strcat(frac2, "1.");
@@ -800,9 +949,19 @@ double Sub(char* in1, char* in2, int prec){
 
 		nb2.exp = ExpToBin(exp2, prec);
 	}
-	frac1 = realloc(frac1, sizeof(char)*(tamsign+3+1+1));
 
+	frac1 = realloc(frac1, sizeof(char)*(tamsign+3+1+1));
 	frac2 = realloc(frac2, sizeof(char)*(tamsign+3+1+1));
+
+	/*
+	 *Insere bit de sinal
+	 */
+	for(i = strlen(frac1); i>=0; i--){
+		if(i == 0)
+			frac1[i] = '0';
+		else frac1[i] = frac1[i-1];
+
+	}
 
 	for(i = strlen(frac2); i>=0; i--){
 		if(i == 0)
@@ -811,16 +970,9 @@ double Sub(char* in1, char* in2, int prec){
 
 	}
 
-	for(i = strlen(frac1); i>=0; i--){
-		if(i == 0)
-			frac1[i] = '0';
-		else frac1[i] = frac1[i-1];
 
-	}
-
-	printf("frac1 %s exp %s frac2 %s exp %s\n", frac1, nb1.exp, frac2, nb2.exp);
 	/*
-	 * soma com 1
+	 * Invertendo string
 	 */
 	for(i = 0; i < strlen(frac2); i++){
 		if(frac2[i] == '0'){
@@ -831,11 +983,13 @@ double Sub(char* in1, char* in2, int prec){
 
 	}
 
-	printf("frac1 %s exp %s frac2 %s exp %s\n", frac1, nb1.exp, frac2, nb2.exp);
 
 	char *comp = malloc(sizeof(char)*(tamsign+3+1));
 	comp[tamsign+4] = '\0';
 
+	/*
+	 * soma com 1
+	 */
 	for(i = tamsign+2, j = tamsign+2; i>=0 ; i--, j--){
 		if(i == tamsign+2){
 			if(frac2[i] == '0'){
@@ -869,10 +1023,7 @@ double Sub(char* in1, char* in2, int prec){
 
 	}
 
-	printf("frac1 %s exp %s frac2 %s exp %s\n", frac1, nb1.exp, frac2, nb2.exp);
 	frac2 = comp;
-	printf("frac1 %s exp %s frac2 %s exp %s\n", frac1, nb1.exp, frac2, nb2.exp);
-
 	char *result = malloc(sizeof(char)*(tamsign+4));
 	result[tamsign+3] = '\0';
 	for(i = tamsign+2, j = tamsign+2; i>=0 ; i--, j--){
@@ -913,19 +1064,8 @@ double Sub(char* in1, char* in2, int prec){
 			result[j] = '.';
 		}
 
-		if(i == 0){
-			if(carry == 1)
-				result[i] = carry;
-			else{
-				strncpy(result, &result[1], sizeof(char)*(tamsign+1));
-
-			}
-
-		}
 	}
-	printf("result %s", result);
 	Normalize(&fp, result, prec, sinal, BinToInt(nb1.exp)-vies);
-	printf("fp.sinal %d, fp.exp %s, fp.sign %s\n", fp.sinal, fp.exp, fp.bin);
 
 	if(fp.sinal)
 		strcat(aux, "1");
@@ -934,7 +1074,6 @@ double Sub(char* in1, char* in2, int prec){
 	strcat(aux, fp.exp);
 	strcat(aux, fp.bin);
 
-	printf("saida %.16lf\n", FpToNum(aux));
 
 	return FpToNum(aux);
 }
